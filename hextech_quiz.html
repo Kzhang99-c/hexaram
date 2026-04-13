@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>海克斯大乱斗彩色海克斯测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #00ffcc;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+        }
+        
+        .intro {
+            background-color: rgba(30, 30, 30, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #00ffcc;
+        }
+        
+        .question-container {
+            background-color: rgba(30, 30, 30, 0.8);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.1);
+        }
+        
+        .question-number {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #00ffcc;
+        }
+        
+        .question-text {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option {
+            background-color: rgba(50, 50, 50, 0.8);
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        
+        .option:hover {
+            background-color: rgba(60, 60, 60, 0.8);
+            border-color: #00ffcc;
+        }
+        
+        .option.selected {
+            background-color: rgba(0, 255, 204, 0.2);
+            border-color: #00ffcc;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            background-color: #00ffcc;
+            color: #1a1a1a;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #00cccc;
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            background-color: #666666;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result-container {
+            background-color: rgba(30, 30, 30, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.2);
+        }
+        
+        .result-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #00ffcc;
+        }
+        
+        .hextech-name {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #ff6600;
+            text-shadow: 0 0 15px rgba(255, 102, 0, 0.5);
+        }
+        
+        .hextech-description {
+            font-size: 16px;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+        
+        .hextech-traits {
+            background-color: rgba(50, 50, 50, 0.8);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .trait {
+            margin: 10px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .trait:before {
+            content: "•";
+            color: #00ffcc;
+            position: absolute;
+            left: 0;
+        }
+        
+        .restart-btn {
+            margin-top: 30px;
+            background-color: #ff6600;
+            color: #ffffff;
+        }
+        
+        .restart-btn:hover {
+            background-color: #ff8833;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: rgba(50, 50, 50, 0.8);
+            border-radius: 5px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #00ffcc;
+            transition: width 0.3s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .question-container {
+                padding: 15px;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>海克斯大乱斗彩色海克斯测试</h1>
+        
+        <div class="intro">
+            <p>通过回答25个问题，测试最适合你的英雄联盟海克斯大乱斗彩色海克斯！</p>
+            <p>请根据你的真实情况回答，选择最符合你第一直觉的选项。</p>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 0%"></div>
+        </div>
+        
+        <div id="question-container" class="question-container">
+            <div class="question-number">问题 1/25</div>
+            <div class="question-text">当面对挑战时，你更倾向于：</div>
+            <div class="options">
+                <div class="option" data-value="1">直接正面应对，喜欢挑战高难度</div>
+                <div class="option" data-value="2">谨慎分析后再行动，确保成功率</div>
+                <div class="option" data-value="3">寻求团队合作，共同解决问题</div>
+                <div class="option" data-value="4">灵活应对，根据情况随时调整策略</div>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <button id="prev-btn" class="btn" disabled>上一题</button>
+            <button id="next-btn" class="btn">下一题</button>
+        </div>
+        
+        <div id="result-container" class="result-container" style="display: none;">
+            <div class="result-title">你的专属彩色海克斯</div>
+            <div class="hextech-name" id="hextech-name"></div>
+            <div class="hextech-description" id="hextech-description"></div>
+            <div class="hextech-traits" id="hextech-traits"></div>
+            <button id="restart-btn" class="btn restart-btn">重新测试</button>
+        </div>
+    </div>
+    
+    <script>
+        // 问题列表
+        const questions = [
+            {
+                text: "当面对挑战时，你更倾向于：",
+                options: [
+                    { value: 1, text: "直接正面应对，喜欢挑战高难度" },
+                    { value: 2, text: "谨慎分析后再行动，确保成功率" },
+                    { value: 3, text: "寻求团队合作，共同解决问题" },
+                    { value: 4, text: "灵活应对，根据情况随时调整策略" }
+                ]
+            },
+            {
+                text: "在团队中，你更看重：",
+                options: [
+                    { value: 1, text: "个人能力的发挥，追求卓越表现" },
+                    { value: 2, text: "团队的整体协作，确保共同目标" },
+                    { value: 3, text: "稳定的发挥，避免失误" },
+                    { value: 4, text: "创新的方法，寻找突破点" }
+                ]
+            },
+            {
+                text: "当你制定计划时，你更倾向于：",
+                options: [
+                    { value: 1, text: "详细规划每一步，确保万无一失" },
+                    { value: 2, text: "设定大致方向，灵活调整细节" },
+                    { value: 3, text: "跟随直觉，边做边调整" },
+                    { value: 4, text: "参考他人经验，结合自己的判断" }
+                ]
+            },
+            {
+                text: "面对压力时，你通常会：",
+                options: [
+                    { value: 1, text: "保持冷静，专注解决问题" },
+                    { value: 2, text: "寻求支持，与他人分担" },
+                    { value: 3, text: "暂时逃避，调整心态后再面对" },
+                    { value: 4, text: "将压力转化为动力，更加努力" }
+                ]
+            },
+            {
+                text: "在社交场合，你更倾向于：",
+                options: [
+                    { value: 1, text: "主动与人交流，成为焦点" },
+                    { value: 2, text: "观察为主，选择性参与" },
+                    { value: 3, text: "与熟悉的人深度交流" },
+                    { value: 4, text: "根据场合调整自己的社交方式" }
+                ]
+            },
+            {
+                text: "当你遇到失败时，你会：",
+                options: [
+                    { value: 1, text: "分析原因，从中学习" },
+                    { value: 2, text: "快速调整，寻找新的机会" },
+                    { value: 3, text: "寻求他人的建议和支持" },
+                    { value: 4, text: "反思自己的能力，调整目标" }
+                ]
+            },
+            {
+                text: "你更看重以下哪种品质：",
+                options: [
+                    { value: 1, text: "勇气和决心" },
+                    { value: 2, text: "智慧和策略" },
+                    { value: 3, text: "团队精神和合作" },
+                    { value: 4, text: "创造力和创新" }
+                ]
+            },
+            {
+                text: "在游戏中，你更倾向于选择哪种角色：",
+                options: [
+                    { value: 1, text: "输出型角色，追求高伤害" },
+                    { value: 2, text: "坦克型角色，保护队友" },
+                    { value: 3, text: "辅助型角色，提供支持" },
+                    { value: 4, text: "灵活型角色，根据情况调整" }
+                ]
+            },
+            {
+                text: "当你需要做决定时，你更依赖：",
+                options: [
+                    { value: 1, text: "理性分析和逻辑判断" },
+                    { value: 2, text: "直觉和个人感受" },
+                    { value: 3, text: "他人的意见和建议" },
+                    { value: 4, text: "综合考虑各种因素" }
+                ]
+            },
+            {
+                text: "你认为成功的关键是：",
+                options: [
+                    { value: 1, text: "个人努力和坚持" },
+                    { value: 2, text: "良好的人际关系和合作" },
+                    { value: 3, text: "机遇和运气" },
+                    { value: 4, text: "不断学习和适应能力" }
+                ]
+            },
+            {
+                text: "在团队合作中，你更擅长：",
+                options: [
+                    { value: 1, text: "领导和组织" },
+                    { value: 2, text: "执行和完成任务" },
+                    { value: 3, text: "沟通和协调" },
+                    { value: 4, text: "创新和解决问题" }
+                ]
+            },
+            {
+                text: "当你面对未知情况时，你会：",
+                options: [
+                    { value: 1, text: "充满好奇，积极探索" },
+                    { value: 2, text: "保持谨慎，做好准备" },
+                    { value: 3, text: "寻求他人的指导" },
+                    { value: 4, text: "随机应变，适应变化" }
+                ]
+            },
+            {
+                text: "你更倾向于哪种工作方式：",
+                options: [
+                    { value: 1, text: "独立工作，自主完成" },
+                    { value: 2, text: "团队合作，共同完成" },
+                    { value: 3, text: "有明确的指导和目标" },
+                    { value: 4, text: "灵活自由，发挥创意" }
+                ]
+            },
+            {
+                text: "当你与他人意见不合时，你会：",
+                options: [
+                    { value: 1, text: "坚持自己的观点，说服他人" },
+                    { value: 2, text: "尊重他人意见，寻找共同点" },
+                    { value: 3, text: "避免冲突，保持和谐" },
+                    { value: 4, text: "分析利弊，做出最优选择" }
+                ]
+            },
+            {
+                text: "你更看重以下哪种价值：",
+                options: [
+                    { value: 1, text: "个人成就和成功" },
+                    { value: 2, text: "家庭和人际关系" },
+                    { value: 3, text: "自由和独立" },
+                    { value: 4, text: "知识和成长" }
+                ]
+            },
+            {
+                text: "在游戏中，你更注重：",
+                options: [
+                    { value: 1, text: "赢得比赛的结果" },
+                    { value: 2, text: "游戏过程的乐趣" },
+                    { value: 3, text: "与队友的配合" },
+                    { value: 4, text: "个人技术的提升" }
+                ]
+            },
+            {
+                text: "当你遇到困难时，你会：",
+                options: [
+                    { value: 1, text: "迎难而上，挑战自我" },
+                    { value: 2, text: "寻找方法，解决问题" },
+                    { value: 3, text: "寻求帮助，共同解决" },
+                    { value: 4, text: "调整目标，适应现实" }
+                ]
+            },
+            {
+                text: "你更倾向于哪种生活方式：",
+                options: [
+                    { value: 1, text: "充满挑战和变化" },
+                    { value: 2, text: "稳定和规律" },
+                    { value: 3, text: "自由和灵活" },
+                    { value: 4, text: "平衡和和谐" }
+                ]
+            },
+            {
+                text: "在团队中，你更关注：",
+                options: [
+                    { value: 1, text: "个人的表现和贡献" },
+                    { value: 2, text: "团队的整体表现" },
+                    { value: 3, text: "团队成员的感受" },
+                    { value: 4, text: "团队的长期发展" }
+                ]
+            },
+            {
+                text: "当你需要学习新技能时，你会：",
+                options: [
+                    { value: 1, text: "通过实践和尝试学习" },
+                    { value: 2, text: "通过理论学习和研究" },
+                    { value: 3, text: "向他人请教和学习" },
+                    { value: 4, text: "结合多种方式学习" }
+                ]
+            },
+            {
+                text: "你更看重以下哪种品质：",
+                options: [
+                    { value: 1, text: "诚实和正直" },
+                    { value: 2, text: "智慧和创造力" },
+                    { value: 3, text: "善良和同理心" },
+                    { value: 4, text: "勇气和决心" }
+                ]
+            },
+            {
+                text: "在游戏中，你更倾向于：",
+                options: [
+                    { value: 1, text: "激进进攻，追求优势" },
+                    { value: 2, text: "稳健防守，寻找机会" },
+                    { value: 3, text: "支援队友，团队至上" },
+                    { value: 4, text: "灵活多变，适应局势" }
+                ]
+            },
+            {
+                text: "当你面对批评时，你会：",
+                options: [
+                    { value: 1, text: "接受批评，反思改进" },
+                    { value: 2, text: "解释原因，维护自己" },
+                    { value: 3, text: "感到沮丧，但努力改进" },
+                    { value: 4, text: "分析批评的合理性，有则改之" }
+                ]
+            },
+            {
+                text: "你更倾向于哪种决策风格：",
+                options: [
+                    { value: 1, text: "快速决策，行动为先" },
+                    { value: 2, text: "深思熟虑，权衡利弊" },
+                    { value: 3, text: "参考他人意见，集体决策" },
+                    { value: 4, text: "根据情况，灵活决策" }
+                ]
+            },
+            {
+                text: "在团队中，你更愿意扮演：",
+                options: [
+                    { value: 1, text: "领导者，指引方向" },
+                    { value: 2, text: "执行者，完成任务" },
+                    { value: 3, text: "协调者，促进沟通" },
+                    { value: 4, text: "创新者，提供新思路" }
+                ]
+            }
+        ];
+        
+        // 彩色海克斯类型
+        const hextechTypes = [
+            {
+                name: "巨人杀手",
+                description: "对高生命值目标造成额外真实伤害，完美适配斩杀特性。面对敌方坦克阵容时伤害提升显著，胜率高达58.7%，为最强彩色海克斯之一。",
+                traits: ["喜欢挑战高难度目标", "追求极致伤害输出", "擅长应对坦克型对手", "具有精准的斩杀能力"],
+                scores: { 1: 3, 2: 1, 3: 1, 4: 2 }
+            },
+            {
+                name: "最万用的瞄准镜",
+                description: "提升250码基础射程并附加5%额外伤害，解决前期射程不足的痛点。适合需要安全输出空间的英雄，提供稳定的伤害提升。",
+                traits: ["注重安全输出环境", "擅长远程消耗", "追求稳定的伤害提升", "喜欢保持距离作战"],
+                scores: { 1: 2, 2: 3, 3: 1, 4: 2 }
+            },
+            {
+                name: "升级：无尽之刃",
+                description: "暴击伤害提升40%，与暴击出装形成完美联动，第四发子弹暴击伤害翻倍。适合依赖暴击输出的英雄，能显著提升爆发能力。",
+                traits: ["追求高爆发伤害", "喜欢暴击流玩法", "注重装备与海克斯的联动", "擅长抓住机会秒杀对手"],
+                scores: { 1: 3, 2: 2, 3: 1, 4: 2 }
+            },
+            {
+                name: "风语者的祝福",
+                description: "大幅提升护盾与治疗效果，覆盖护盾、加速附带续航、大招护盾，保核与团队血线抬升质变，软辅彩色T0，拿到即锁。",
+                traits: ["注重团队保护", "擅长辅助和支援", "关心队友的生存", "喜欢为团队提供增益"],
+                scores: { 1: 1, 2: 2, 3: 3, 4: 2 }
+            },
+            {
+                name: "终极唤醒",
+                description: "开启大招后获得巨额技能急速，Q/W/E冷却极速缩减，可高频放变羊、护盾、加速，大招覆盖期内全程保人，连续控制与保护拉满。",
+                traits: ["擅长技能连招", "注重技能急速", "喜欢高频释放技能", "擅长在大招期间发挥最大作用"],
+                scores: { 1: 2, 2: 2, 3: 2, 4: 3 }
+            },
+            {
+                name: "最终形态",
+                description: "开启R获得自身护盾、移速与全能吸血，解决身板脆、开大招保人易被集火的问题，兼顾自保与保核，稳健流首选彩色。",
+                traits: ["注重自身生存能力", "喜欢全面发展", "擅长在危险中保护自己", "追求平衡的攻防能力"],
+                scores: { 1: 2, 2: 3, 3: 2, 4: 2 }
+            },
+            {
+                name: "神圣干预",
+                description: "低血量触发护盾与免控，被突脸刺客针对时绝境自保，避免被瞬秒导致团队失去保护核心，防强开必备棱彩。",
+                traits: ["擅长绝境反击", "注重生存能力", "喜欢有保障的操作空间", "擅长应对突发情况"],
+                scores: { 1: 2, 2: 2, 3: 2, 4: 3 }
+            },
+            {
+                name: "质变：棱彩阶",
+                description: "全属性、技能效果全面提升，护盾厚度、控制时长、移速同步加强，无专属彩色时通用最优，适配所有流派。",
+                traits: ["追求全面提升", "适应各种游戏风格", "喜欢稳定的属性加成", "注重整体实力的增强"],
+                scores: { 1: 2, 2: 2, 3: 2, 4: 3 }
+            },
+            {
+                name: "全心为你",
+                description: "强化队友增益效果，W加速、E护盾、R属性加成显著提高，让己方核心输出/前排战力翻倍，团队流核心彩色。",
+                traits: ["注重团队增益", "擅长提升队友能力", "喜欢团队合作", "追求团队整体实力的提升"],
+                scores: { 1: 1, 2: 2, 3: 3, 4: 2 }
+            },
+            {
+                name: "珠光护手",
+                description: "技能暴击伤害提升，Q技能享受全额爆伤加成（虽无法暴击）。配合无尽等暴击装收益翻倍，适合技能输出型英雄。",
+                traits: ["追求技能爆发伤害", "喜欢暴击流玩法", "注重装备与海克斯的联动", "擅长技能输出"],
+                scores: { 1: 3, 2: 2, 3: 1, 4: 2 }
+            },
+            {
+                name: "歌利亚巨人",
+                description: "体型变大，获得35%生命值和15%适应之力。大幅提升生存能力和输出能力，适合坦克和战士英雄。",
+                traits: ["注重生存能力", "喜欢正面作战", "追求全面提升", "擅长承受伤害"],
+                scores: { 1: 2, 2: 3, 3: 2, 4: 1 }
+            },
+            {
+                name: "玻璃大炮",
+                description: "减少30%最大生命值，造成15%额外真实伤害。牺牲生存换取高额伤害，适合高爆发输出英雄。",
+                traits: ["追求极致伤害", "喜欢风险与回报", "擅长秒杀对手", "注重输出能力"],
+                scores: { 1: 3, 2: 1, 3: 1, 4: 2 }
+            },
+            {
+                name: "地狱三头犬",
+                description: "获得丛刃和强攻符文。大幅提升普攻输出能力，适合依赖普攻的英雄。",
+                traits: ["喜欢普攻输出", "擅长持续作战", "追求攻速优势", "注重平A伤害"],
+                scores: { 1: 3, 2: 2, 3: 1, 4: 2 }
+            },
+            {
+                name: "秘术冲拳",
+                description: "普攻减少基础技能CD，配合虚幻武器可实现技能触发普攻特效，团战中Q/W无限循环，是经典‘电风扇’核心彩色。",
+                traits: ["擅长技能连招", "喜欢高频输出", "注重技能急速", "擅长持续作战"],
+                scores: { 1: 2, 2: 2, 3: 1, 4: 3 }
+            },
+            {
+                name: "叠角龙",
+                description: "叠层效率提升100%，被动叠层是后期核心，可大幅缩短成型时间。适合依赖被动叠层的英雄。",
+                traits: ["注重后期发展", "喜欢持续成长", "擅长长期作战", "追求后期优势"],
+                scores: { 1: 2, 2: 3, 3: 1, 4: 2 }
+            },
+            {
+                name: "炼狱导管",
+                description: "技能命中后造成额外灼烧伤害，持续一段时间。适合技能持续伤害型英雄，如火男、莉莉娅等。",
+                traits: ["擅长持续伤害", "喜欢消耗对手", "注重技能命中", "擅长阵地战"],
+                scores: { 1: 2, 2: 2, 3: 1, 4: 3 }
+            },
+            {
+                name: "红包",
+                description: "击杀或助攻后获得额外金币，加速装备成型。适合需要快速发育的英雄，能更快地做出核心装备。",
+                traits: ["注重经济发育", "喜欢快速成型", "擅长击杀和助攻", "追求装备优势"],
+                scores: { 1: 3, 2: 2, 3: 1, 4: 2 }
+            },
+            {
+                name: "小丑学院",
+                description: "增加技能急速和冷却缩减，提高技能释放频率。适合依赖技能的英雄，能更频繁地释放技能。",
+                traits: ["擅长技能输出", "注重技能急速", "喜欢高频释放技能", "擅长技能连招"],
+                scores: { 1: 2, 2: 2, 3: 1, 4: 3 }
+            },
+            {
+                name: "尤里卡",
+                description: "提供自适应之力和技能急速，根据游戏进程自动调整属性。适合各种类型的英雄，提供全面的属性提升。",
+                traits: ["追求全面提升", "适应各种游戏风格", "喜欢灵活应变", "注重整体实力"],
+                scores: { 1: 2, 2: 2, 3: 2, 4: 3 }
+            },
+            {
+                name: "夺金",
+                description: "用攻击或技能命中敌方英雄后获得金币，持续积累经济优势。适合频繁与敌方互动的英雄。",
+                traits: ["注重经济发育", "喜欢持续互动", "擅长积累优势", "追求装备领先"],
+                scores: { 1: 2, 2: 3, 3: 1, 4: 2 }
+            }
+        ];
+        
+        // 全局变量
+        let currentQuestion = 0;
+        let answers = new Array(questions.length).fill(null);
+        
+        // DOM 元素
+        const questionContainer = document.getElementById('question-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resultContainer = document.getElementById('result-container');
+        const restartBtn = document.getElementById('restart-btn');
+        const progressFill = document.querySelector('.progress-fill');
+        
+        // 渲染问题
+        function renderQuestion() {
+            const question = questions[currentQuestion];
+            questionContainer.innerHTML = `
+                <div class="question-number">问题 ${currentQuestion + 1}/${questions.length}</div>
+                <div class="question-text">${question.text}</div>
+                <div class="options">
+                    ${question.options.map((option, index) => `
+                        <div class="option ${answers[currentQuestion] === option.value ? 'selected' : ''}" data-value="${option.value}">
+                            ${option.text}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            // 更新进度条
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            progressFill.style.width = `${progress}%`;
+            
+            // 更新按钮状态
+            prevBtn.disabled = currentQuestion === 0;
+            nextBtn.textContent = currentQuestion === questions.length - 1 ? '提交' : '下一题';
+            
+            // 添加选项点击事件
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    answers[currentQuestion] = parseInt(option.dataset.value);
+                });
+            });
+        }
+        
+        // 计算结果
+        function calculateResult() {
+            const scores = hextechTypes.map(hextech => {
+                let totalScore = 0;
+                for (let i = 0; i < answers.length; i++) {
+                    totalScore += hextech.scores[answers[i]] || 0;
+                }
+                return { ...hextech, score: totalScore };
+            });
+            
+            // 按分数排序
+            scores.sort((a, b) => b.score - a.score);
+            return scores[0];
+        }
+        
+        // 显示结果
+        function showResult() {
+            const result = calculateResult();
+            document.getElementById('hextech-name').textContent = result.name;
+            document.getElementById('hextech-description').textContent = result.description;
+            document.getElementById('hextech-traits').innerHTML = result.traits.map(trait => `
+                <div class="trait">${trait}</div>
+            `).join('');
+            
+            questionContainer.style.display = 'none';
+            document.querySelector('.navigation').style.display = 'none';
+            document.querySelector('.progress-bar').style.display = 'none';
+            resultContainer.style.display = 'block';
+        }
+        
+        // 事件监听
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                renderQuestion();
+            }
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            // 检查是否选择了选项
+            if (answers[currentQuestion] === null) {
+                alert('请选择一个选项');
+                return;
+            }
+            
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        });
+        
+        restartBtn.addEventListener('click', () => {
+            currentQuestion = 0;
+            answers = new Array(questions.length).fill(null);
+            questionContainer.style.display = 'block';
+            document.querySelector('.navigation').style.display = 'flex';
+            document.querySelector('.progress-bar').style.display = 'block';
+            resultContainer.style.display = 'none';
+            renderQuestion();
+        });
+        
+        // 初始化
+        renderQuestion();
+    </script>
+</body>
+</html>
